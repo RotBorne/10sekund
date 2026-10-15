@@ -1,0 +1,24 @@
+{
+  "name": "mobile-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@tanstack/react-query": "^5.104.3",
+    "axios": "^1.20.0",
+    "expo": "~57.0.30",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-web": "^0.21.2",
+    "socket.io-client": "^4.8.4"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "private": true
+}
