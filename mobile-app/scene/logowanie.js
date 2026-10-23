@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ImageBackground, ScrollView, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { useFonts } from 'expo-font';
 
 export default function Logowanie({navigation}) {
@@ -14,8 +14,7 @@ export default function Logowanie({navigation}) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
   }
 
-  return (
-    <ScrollView>     
+  return (    
     <View style={styles.container}>
       <View style={styles.header}>
       <Text style={styles.whiteHeaderText}>Co Kto?</Text>
@@ -45,7 +44,6 @@ export default function Logowanie({navigation}) {
       <StatusBar style="auto" />
     </View>
     </View>
-    </ScrollView> 
   );
 }
 
@@ -56,20 +54,19 @@ const styles = StyleSheet.create({
   },
   conteiner2:{
     flex: 1,
-    width: '100%',
     flexDirection: 'row',
   },
   header:{
     width: '100%',
     backgroundColor: '#4e1f08de',
-    alignItems: 'flex-start', 
+    alignItems: 'center', 
+    paddingTop: 30,
   },
   normalText:{    
     fontSize: 30,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'left',
-    //paddingLeft: 50,
     marginTop: 20,
 
   },
@@ -77,12 +74,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 100,
   },
   whiteHeaderText:{
     width: '100%',
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 40,
     paddingBottom: 10,
     color: 'white',
     fontFamily: 'common font',
@@ -91,14 +87,15 @@ const styles = StyleSheet.create({
   blackHeaderText:{
     width: '100%',
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 40,
     paddingBottom: 10,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
   },
   sidebar:{
-    width: '15%',
+    width: '20%',
+    height: '100%',
     backgroundColor: '#99451ea2',
     alignItems: 'flex-end',
     justifyContent: 'space-around',
@@ -108,7 +105,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
-    width: '60%',
+    width: '80%',
     backgroundColor: '#3a0e00a2',
     alignItems: 'center',
     justifyContent: 'center',

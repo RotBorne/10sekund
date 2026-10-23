@@ -6,6 +6,23 @@ import { useFonts } from 'expo-font';
 export default function Rejestracja({navigation}) {
   const [login, setLogin] = useState('');
   const [haslo, setHaslo] = useState('');
+  const [powtorz, setPowtorz] = useState('');
+  const [komunikat, setKomunikat] = useState('');
+  const [typ, setTyp] = useState('error');
+  const warRej = () => {
+      if(haslo===''||powtorz===''){
+        setKomunikat('Wprowadź hasło!');
+        setTyp('error');
+      }
+      else if(haslo!==powtorz){
+        setKomunikat('Hasła muszą być identyczne!');
+        setTyp('error');
+      }
+      else{
+        setKomunikat('Twoje dane zostały dodane do bazy!');
+        setTyp('poprawny');
+      }
+  };
   const [fontsLoaded] = useFonts({
     'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
   });
@@ -37,8 +54,11 @@ export default function Rejestracja({navigation}) {
       <Text style={styles.normalText}>Hasło: </Text>
       <TextInput style={styles.inputText} placeholder="podaj hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
          <Text style={styles.normalText}>Powtórz hasło: </Text>
-      <TextInput style={styles.inputText} placeholder="powtórz hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
+      <TextInput style={styles.inputText} placeholder="powtórz hasło" secureTextEntry={true} onChangeText={(val) => setPowtorz(val)}/>
+      <TouchableOpacity onPress={warRej}>
       <Text style={styles.button2}> Zarejestruj </Text>
+      </TouchableOpacity>
+      {komunikat!=='' && typ==='error' ? <Text style={styles.error}>{komunikat}</Text> : <Text style={styles.komunikaty}>{komunikat}</Text>}
       <Text style={styles.normalText}> Masz Konto? </Text>
       <TouchableOpacity>
       <Text style={styles.button2} onPress={()=>navigation.goBack()}> Zaloguj się </Text>
@@ -58,13 +78,13 @@ const styles = StyleSheet.create({
   },
   conteiner2:{
     flex: 1,
-    width: '100%',
     flexDirection: 'row',
   },
   header:{
     width: '100%',
     backgroundColor: '#4e1f08de',
-    alignItems: 'flex-start', 
+    alignItems: 'center', 
+    paddingTop: 30,
   },
   normalText:{    
     fontSize: 30,
@@ -78,12 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
-    padding: 100,
   },
   whiteHeaderText:{
     width: '100%',
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 40,
     paddingBottom: 10,
     color: 'white',
     fontFamily: 'common font',
@@ -92,14 +111,15 @@ const styles = StyleSheet.create({
   blackHeaderText:{
     width: '100%',
     fontWeight: 'bold',
-    fontSize: 50,
+    fontSize: 40,
     paddingBottom: 10,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
   },
   sidebar:{
-    width: '15%',
+    width: '20%',
+    height: '100%',
     backgroundColor: '#99451ea2',
     alignItems: 'flex-end',
     justifyContent: 'space-around',
@@ -109,7 +129,7 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
-    width: '60%',
+    width: '80%',
     backgroundColor: '#3a0e00a2',
     alignItems: 'center',
     justifyContent: 'center',
@@ -126,8 +146,8 @@ const styles = StyleSheet.create({
     margin: 30,
     shadowColor: 'black',
     shadowOffset: {width: 2, height: 2},
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
+    shadowOpacity: 2,
+    shadowRadius: 10,
   },
   inputText:{
     borderWidth: 2,
@@ -138,5 +158,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
     margin:5,
+  },
+  error:{
+    fontSize: 30,
+    color: 'red',
+    fontFamily: 'common font',
+    textAlign: 'left',
+    marginTop: 20,
+  },
+  komunikaty:{
+    fontSize: 30,
+    color: '#025e07',
+    fontFamily: 'common font',
+    textAlign: 'left',
+    marginTop: 20,
   },
 });

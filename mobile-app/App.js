@@ -10,7 +10,7 @@ export default function App() {
 
   return (      
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Logowanie">
+      <Stack.Navigator initialRouteName="Logowanie" screenOptions={{headerShown: false}}>
         <Stack.Screen 
         name="Logowanie"
         component={Logowanie}
