@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
+import {useState} from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
 
@@ -16,6 +16,10 @@ export default function Rejestracja({navigation}) {
       }
       else if(haslo!==powtorz){
         setKomunikat('Hasła muszą być identyczne!');
+        setTyp('error');
+      }
+      else if(haslo===powtorz&&login===''){
+        setKomunikat('Podaj login!');
         setTyp('error');
       }
       else{
@@ -38,13 +42,6 @@ export default function Rejestracja({navigation}) {
       <Text style={styles.whiteHeaderText}>Co Kto?</Text>
       </View>
     <View style={styles.conteiner2}>
-        <View style={styles.sidebar}>
-          <Text style={styles.button}>profil</Text>
-          <Text style={styles.button}>zadania</Text>
-          <Text style={styles.button}>lista zakupów</Text>
-          <Text style={styles.button}>statystyki</Text>
-          <Text style={styles.button}>ustawienia</Text>
-        </View>
       <ImageBackground source={require('../assets/background.jpg')} 
     style={styles.body}
     >
@@ -92,7 +89,6 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'left',
     marginTop: 20,
-
   },
   body:{
     flex: 1,
@@ -116,23 +112,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
-  },
-  sidebar:{
-    width: '20%',
-    height: '100%',
-    backgroundColor: '#99451ea2',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-  },
-  button:{
-    fontSize: 30,
-    color: 'black',
-    fontFamily: 'common font',
-    textAlign: 'center',
-    width: '80%',
-    backgroundColor: '#3a0e00a2',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   button2:{
     fontSize: 30,
@@ -160,17 +139,17 @@ const styles = StyleSheet.create({
     margin:5,
   },
   error:{
-    fontSize: 30,
+    fontSize: 20,
     color: 'red',
     fontFamily: 'common font',
     textAlign: 'left',
-    marginTop: 20,
+    marginTop: 10,
   },
   komunikaty:{
-    fontSize: 30,
+    fontSize: 20,
     color: '#025e07',
     fontFamily: 'common font',
     textAlign: 'left',
-    marginTop: 20,
+    marginTop: 10,
   },
 });

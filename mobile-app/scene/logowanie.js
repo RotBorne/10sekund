@@ -20,13 +20,6 @@ export default function Logowanie({navigation}) {
       <Text style={styles.whiteHeaderText}>Co Kto?</Text>
       </View>
     <View style={styles.conteiner2}>
-        <View style={styles.sidebar}>
-          <Text style={styles.button}>profil</Text>
-          <Text style={styles.button}>zadania</Text>
-          <Text style={styles.button}>lista zakupów</Text>
-          <Text style={styles.button}>statystyki</Text>
-          <Text style={styles.button}>ustawienia</Text>
-        </View>
       <ImageBackground source={require('../assets/background.jpg')} 
     style={styles.body}
     >
@@ -35,7 +28,9 @@ export default function Logowanie({navigation}) {
       <TextInput style={styles.inputText} placeholder="wpisz login" onChangeText={(val) => setLogin(val)} />
       <Text style={styles.normalText}>Hasło: </Text>
       <TextInput style={styles.inputText} placeholder="wpisz hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
-      <Text style={styles.button2}> Zaloguj </Text>
+      <TouchableOpacity>
+      <Text style={styles.button2} onPress={() => navigation.navigate('Nowa rodzina')}> Zaloguj się </Text>
+      </TouchableOpacity>
       <Text style={styles.normalText}> Nie masz konta? </Text>
       <TouchableOpacity>
       <Text style={styles.button2} onPress={() => navigation.navigate('Rejestracja')}> Zarejestruj się </Text>
@@ -68,7 +63,6 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'left',
     marginTop: 20,
-
   },
   body:{
     flex: 1,
@@ -92,23 +86,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
-  },
-  sidebar:{
-    width: '20%',
-    height: '100%',
-    backgroundColor: '#99451ea2',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-  },
-  button:{
-    fontSize: 30,
-    color: 'black',
-    fontFamily: 'common font',
-    textAlign: 'center',
-    width: '80%',
-    backgroundColor: '#3a0e00a2',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   button2:{
     fontSize: 30,
