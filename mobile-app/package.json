@@ -26,5 +26,11 @@
     "ios": "expo start --ios",
     "web": "expo start --web"
   },
+  "lint-staged": {
+  "*.{js,jsx,ts,tsx}": [
+    "prettier --write",
+    "eslint --fix"
+  ]
+  },
   "private": true
 }
