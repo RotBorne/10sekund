@@ -1,6 +1,6 @@
 # Specyfikacja projektu *Co Kto?*
 
-**Wersja specyfikacji:** 1.0.0
+**Wersja specyfikacji:** 1.0.0\
 **Status:** w trakcje realizacji
 
 ## Opis projektu
