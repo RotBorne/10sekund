@@ -54,10 +54,7 @@ export default function App() {
         name="Sidebar"
         component={Sidebar}
         />
-      </Stack.Navigator>
-
-
-      
+      </Stack.Navigator>      
     </NavigationContainer>
   );
 }
