@@ -1,0 +1,24 @@
+# Zależności i pakiety (dla Node.js / React / Vite)
+node_modules/
+jspm_packages/
+
+# Zmienne środowiskowe i klucze API
+.env
+.env.local
+.env.*.local
+
+# Pliki po kompilacji / budowaniu
+dist/
+build/
+.output/
+
+# Pliki systemowe i edytorów
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Dzienniki błędów
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
