@@ -1,28 +1,38 @@
--- 1. TABELA GRUP (Mieszkania / Pokoje)
-CREATE TABLE groups (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL DEFAULT 'Moje Mieszkanie',
-  access_code VARCHAR(10) UNIQUE NOT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- 1. TABELA RODZINA
+CREATE TABLE rodzina (
+    id_rodziny SERIAL PRIMARY KEY,
+    typ_rodziny VARCHAR(50),
+    czas_stworzenia TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. TABELA UŻYTKOWNIKÓW (Latorośle / Lokatorzy)
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  group_id INT REFERENCES groups(id) ON DELETE CASCADE,
-  name VARCHAR(50) NOT NULL,
-  avatar_color VARCHAR(20) DEFAULT '#cba6f7',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- 2. TABELA UŻYTKOWNICY
+CREATE TABLE uzytkownicy (
+    id_uzytkownika SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL,
+    typ_mieszkanca VARCHAR(50),
+    czy_na_wyjezdzie BOOLEAN DEFAULT false,
+    id_rodziny INT REFERENCES rodzina(id_rodziny) ON DELETE SET NULL
 );
 
--- 3. TABELA ZADAŃ (Grafik Sprzątania)
-CREATE TABLE tasks (
-  id SERIAL PRIMARY KEY,
-  group_id INT REFERENCES groups(id) ON DELETE CASCADE,
-  title VARCHAR(255) NOT NULL,
-  day VARCHAR(20) NOT NULL,
-  task_date DATE NOT NULL,
-  is_weekly BOOLEAN DEFAULT false,
-  assigned_to INT REFERENCES users(id) ON DELETE SET NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- 3. TABELA LOGOWANIE
+CREATE TABLE logowanie (
+    login VARCHAR(50) PRIMARY KEY,
+    haslo VARCHAR(255) NOT NULL,
+    kod_rodziny VARCHAR(50)
+);
+
+-- 4. TABELA OD LISTY OBOWIĄZKÓW
+CREATE TABLE lista_obowiazkow (
+    id_zadania SERIAL PRIMARY KEY,
+    nazwa_zadania VARCHAR(255) NOT NULL,
+    czas_powtarzania VARCHAR(50),
+    id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE,
+    czy_wykonane BOOLEAN DEFAULT false
+);
+
+-- 5. TABELA CZAS WYKONANIA
+CREATE TABLE czas_wykonania (
+    czas TIMESTAMP DEFAULT CURRENT_TIMESTAMP PRIMARY KEY,
+    id_zadania INT REFERENCES lista_obowiazkow(id_zadania) ON DELETE CASCADE,
+    id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE
 );
