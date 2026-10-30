@@ -3,47 +3,35 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, S
 import { useFonts } from 'expo-font';
 import {useState} from 'react';
 
-export default function Zadania({navigation}) {
+import Sidebar from "../scene/sidebar";
+
+export default function ListaZakupow({navigation}) {
+  const [ifopen,setifopen] = useState(false);
   const [fontsLoaded] = useFonts({
     'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
   });
-
   if (!fontsLoaded) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
   }
-
-  return (    
+  return (   
+    <ScrollView> 
     <View style={styles.container}>
       <View style={styles.header}>
-      <Text style={styles.whiteHeaderText}>Co Kto?</Text>
-      </View>
-    <ScrollView>
-    <View style={styles.conteiner2}>
-        <View style={styles.sidebar}>
-          <TouchableOpacity>
-            <Text style={styles.button} onPress={() => navigation.navigate('Profil')}> profil </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.button} onPress={() => navigation.navigate('Zadania')}> zadania </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.button} onPress={() => navigation.navigate('ListaZakupow')}> lista zakupów </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.button} onPress={() => navigation.navigate('Statystyki')}> statystyki </Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text style={styles.button} onPress={() => navigation.navigate('Ustawienia')}> ustawienia </Text>
-          </TouchableOpacity>
-        </View>
-      <ImageBackground source={require('../assets/background.jpg')} 
-    style={styles.body}>
+        <TouchableOpacity style={styles.menuButton} onPress={()=>setifopen(true)}>
+    <Text style={styles.normalText}>=</Text>
+    </TouchableOpacity>
+      <Text style={styles.whiteHeaderText}> Co Kto?</Text>
+      </View> 
+    <View style={styles.container}>
+      <ImageBackground source={require('../assets/background.jpg')} style={styles.body}>
       <Text style={styles.blackHeaderText}>Zadania</Text>
       </ImageBackground>
-      <StatusBar style="auto" />
-    </View>
+    </View>    
+    </View> 
+      {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)}/>:null}
+      <StatusBar style="auto" />     
     </ScrollView>
-    </View>
+    
   );
 }
 
@@ -59,7 +47,9 @@ const styles = StyleSheet.create({
   header:{
     width: '100%',
     backgroundColor: '#4e1f08de',
-    alignItems: 'center', 
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start', 
     paddingTop: 30,
   },
   normalText:{    
@@ -68,15 +58,15 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'left',
     marginTop: 20,
-
   },
   body:{
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    minHeight:500,
   },
   whiteHeaderText:{
-    width: '100%',
+    flex:1,
     fontWeight: 'bold',
     fontSize: 40,
     paddingBottom: 10,
@@ -88,29 +78,10 @@ const styles = StyleSheet.create({
     width: '100%',
     fontWeight: 'bold',
     fontSize: 40,
-    paddingBottom: 10,
+    marginBottom: 10,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
-  },
-  sidebar:{
-    width: '20%',
-    height: '100%',
-    backgroundColor: '#99451ea2',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-  },
-  button:{
-    fontSize: 30,
-    color: 'black',
-    fontFamily: 'common font',
-    textAlign: 'center',
-    width:'60%',
-    backgroundColor: '#3a0e00a2',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom:10,
   },
   button2:{
     fontSize: 30,
@@ -137,4 +108,16 @@ const styles = StyleSheet.create({
     padding: 5,
     margin:5,
   },
+  menuButton:{
+    fontSize: 30,
+    color: 'black',
+    fontFamily: 'common font',
+    textAlign: 'center',
+    width: 50,
+    height: 50,
+    backgroundColor: '#3a0e00bb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+  }
 });

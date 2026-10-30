@@ -29,6 +29,7 @@ export default function Logowanie({navigation}) {
       <Text style={styles.normalText}>Hasło: </Text>
       <TextInput style={styles.inputText} placeholder="wpisz hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
       <TouchableOpacity>
+        {/*przeszukaj baze czy istenie para: taki login z wpisanym hasłem*/}
       <Text style={styles.button2} onPress={() => navigation.navigate('Nowa rodzina')}> Zaloguj się </Text>
       </TouchableOpacity>
       <Text style={styles.normalText}> Nie masz konta? </Text>

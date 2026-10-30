@@ -11,6 +11,7 @@ import ListaZakupow from './scene/lista-zakupow';
 import Statystyki from './scene/statystyki';
 import Ustawienia from './scene/ustawienia';
 import Sidebar from './scene/sidebar';
+import Kalendarz from './scene/kalendarz';
 
 const Stack=createNativeStackNavigator();
 export default function App() {
@@ -53,6 +54,10 @@ export default function App() {
         <Stack.Screen 
         name="Sidebar"
         component={Sidebar}
+        />
+        <Stack.Screen 
+        name="Kalendarz"
+        component={Kalendarz}
         />
       </Stack.Navigator>      
     </NavigationContainer>

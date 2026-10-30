@@ -1,49 +1,150 @@
 import { StatusBar } from 'expo-status-bar';
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  FlatList,
+} from 'react-native';
 import { useFonts } from 'expo-font';
+import { useState } from 'react';
+import DropDownPicker from 'react-native-dropdown-picker';
+import Checkbox from 'expo-checkbox';
 
-export default function Logowanie({navigation}) {
+import Sidebar from '../scene/sidebar';
+
+export default function Nowarodzina({ navigation }) {
+  const [ifopen, setifopen] = useState(false);
+  const [openTyp, setopenTyp] = useState(false);
+  const [valueTyp, setvalueTyp] = useState(null);
+  const [itemTyp, setitemTyp] = useState([
+    { label: 'Rodzina', value: 'rodzina' },
+    { label: 'Współlokatorzy', value: 'wspollokatorzy' },
+  ]);
+  const [openRola_W, setopenRola_W] = useState(false);
+  const [valueRola_W, setvalueRola_W] = useState(null);
+  const [itemRola_W, setitemRola_W] = useState([
+    { label: 'Administrator', value: 'admin' },
+    { label: 'Czlonek', value: 'czlonek' },
+  ]);
+  const [openRola_R, setopenRola_R] = useState(false);
+  const [valueRola_R, setvalueRola_R] = useState(null);
+  const [itemRola_R, setitemRola_R] = useState([
+    { label: 'Rodzic', value: 'rodzina' },
+    { label: 'Dziecko', value: 'dziecko' },
+  ]);
+
+  const [kod, setkod] = useState(null);
+  const zmianakodu = () => {
+    setkod('6xy7mn');
+    {
+      /*zmienna która ustala kod*/
+    }
+  };
+  const [check, setcheck] = useState(false);
   const [fontsLoaded] = useFonts({
     'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
   });
-
   if (!fontsLoaded) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
   }
-
-  return (    
-    <View style={styles.container}>
-      <View style={styles.header}>
-      <Text style={styles.whiteHeaderText}>Co Kto?</Text>
-      </View>
-    <View style={styles.conteiner2}>
-        <View style={styles.sidebar}>
-           <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('Profil')}> profil </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('Zadania')}> zadania </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('ListaZakupow')}> lista zakupów </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('Statystyki')}> statystyki </Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('Ustawienia')}> ustawienia </Text>
-            </TouchableOpacity>
+  return (
+    <ScrollView>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            style={styles.menuButton}
+            onPress={() => setifopen(true)}>
+            <Text style={styles.normalText}>=</Text>
+          </TouchableOpacity>
+          <Text style={styles.whiteHeaderText}> Co Kto?</Text>
         </View>
-      <ImageBackground source={require('../assets/background.jpg')} 
-    style={styles.body}
-    >
-      <Text style={styles.blackHeaderText}>Utwórz nową rodzine</Text>
-      
-      </ImageBackground>
+        <View style={styles.container}>
+          <ImageBackground
+            source={require('../assets/background.jpg')}
+            style={styles.body}>
+            <Text style={styles.blackHeaderText}>Nowa rodzina</Text>
+            <View style={styles.conteiner2}>
+            <Checkbox
+            style={styles.checkboxStyle}
+            value={check}
+            onValueChange={setcheck}
+            color={check ? '#4e1f08de':'black'}
+            />
+            <Text style={styles.normalText}>Załóż nową rodzine</Text>
+            </View>
+            {check===false ? (
+            <View>
+            <TextInput style={styles.inputText} placeholder="wpisz kod"/>
+            <TouchableOpacity>
+              <Text style={styles.button2} onPress={() => navigation.navigate('Profil')}> Potwierdź </Text>
+            </TouchableOpacity>
+            </View>
+            ) : (
+            <View>
+            <Text style={styles.normalText}>Wybierz typ rodziny:</Text>
+            <View style={styles.dropdown}>
+              <DropDownPicker
+                open={openTyp}
+                value={valueTyp}
+                items={itemTyp}
+                setOpen={setopenTyp}
+                setValue={setvalueTyp}
+                setItems={setitemTyp}
+                style={styles.button2}
+                textStyle={styles.normalText}
+                placeholder="Wybierz Typ"
+              />
+            </View>
+            <Text style={styles.normalText}>Wybierz role:</Text>
+            {valueTyp === 'rodzina' ? (
+              <View style={styles.dropdown}>
+                <DropDownPicker
+                  open={openRola_R}
+                  value={valueRola_R}
+                  items={itemRola_R}
+                  setOpen={setopenRola_R}
+                  setValue={setvalueRola_R}
+                  setItems={setitemRola_R}
+                  style={styles.button2}
+                  textStyle={styles.normalText}
+                  placeholder="Wybierz role"
+                />
+              </View>
+            ) : (
+              <View style={styles.dropdown}>
+                <DropDownPicker
+                  open={openRola_W}
+                  value={valueRola_W}
+                  items={itemRola_W}
+                  setOpen={setopenRola_W}
+                  setValue={setvalueRola_W}
+                  setItems={setitemRola_W}
+                  style={styles.button2}
+                  textStyle={styles.normalText}
+                  placeholder="Wybierz role"
+                />
+              </View>
+            )}
+            <Text style={styles.normalText}> Twój kod rodziny: </Text>
+            <TouchableOpacity onPress={zmianakodu} style={styles.button2}>
+              <View> pokaż kod </View>
+            </TouchableOpacity>
+            {/*tu zostaje przekazany wygenerowny kod rodziny*/}
+            {kod !== null && <Text style={styles.normalText}>{kod}</Text>}
+            </View>
+            )}
+          </ImageBackground>
+        </View>
+      </View>
+      {ifopen ? (
+        <Sidebar navigation={navigation} onClose={() => setifopen(false)} />
+      ) : null}
       <StatusBar style="auto" />
-    </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -52,31 +153,39 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  conteiner2:{
-    flex: 1,
+  conteiner2: {
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    marginVertical: 10,
   },
-  header:{
+  checkboxStyle:{
+    marginRight: 10,
+  },
+  header: {
     width: '100%',
     backgroundColor: '#4e1f08de',
-    alignItems: 'center', 
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
     paddingTop: 30,
   },
-  normalText:{    
+  normalText: {
     fontSize: 30,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'left',
     marginTop: 20,
-
   },
-  body:{
+  body: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
+    minHeight: 500,
   },
-  whiteHeaderText:{
-    width: '100%',
+  whiteHeaderText: {
+    flex: 1,
     fontWeight: 'bold',
     fontSize: 40,
     paddingBottom: 10,
@@ -84,33 +193,16 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'center',
   },
-  blackHeaderText:{
+  blackHeaderText: {
     width: '100%',
     fontWeight: 'bold',
     fontSize: 40,
-    paddingBottom: 10,
+    marginBottom: 10,
     color: 'black',
     fontFamily: 'common font',
     textAlign: 'center',
   },
-  sidebar:{
-    width: '20%',
-    height: '100%',
-    backgroundColor: '#99451ea2',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-  },
-  button:{
-    fontSize: 30,
-    color: 'black',
-    fontFamily: 'common font',
-    textAlign: 'center',
-    width: '80%',
-    backgroundColor: '#3a0e00a2',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  button2:{
+  button2: {
     fontSize: 30,
     color: 'black',
     fontFamily: 'common font',
@@ -121,11 +213,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     margin: 30,
     shadowColor: 'black',
-    shadowOffset: {width: 2, height: 2},
+    shadowOffset: { width: 2, height: 2 },
     shadowOpacity: 0.25,
-    shadowRadius: 3,
+    shadowRadius: 10,
   },
-  inputText:{
+  inputText: {
     borderWidth: 2,
     borderColor: '#313131',
     fontSize: 30,
@@ -133,6 +225,25 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'center',
     padding: 5,
-    margin:5,
+    margin: 5,
+  },
+  menuButton: {
+    fontSize: 30,
+    color: 'black',
+    fontFamily: 'common font',
+    textAlign: 'center',
+    width: 50,
+    height: 50,
+    backgroundColor: '#3a0e00bb',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 5,
+  },
+  dropdown: {
+    width: '60%',
+    alignItems: 'center',
+    textAlign: 'center',
+    justifyContent: 'center',
+    margin: 30,
   },
 });

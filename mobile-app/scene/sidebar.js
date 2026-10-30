@@ -24,6 +24,9 @@ export default function Sidebar({navigation, onClose}) {
             <Text style={styles.button} onPress={() => closesidebar('Zadania')}> zadania </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.touchableButton}>
+            <Text style={styles.button} onPress={() => closesidebar('Kalendarz')}> kalendarz </Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.touchableButton}>
             <Text style={styles.button} onPress={() => closesidebar('ListaZakupow')}> lista zakupów </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.touchableButton}>

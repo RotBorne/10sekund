@@ -23,6 +23,7 @@ export default function Rejestracja({navigation}) {
         setTyp('error');
       }
       else{
+        {/*jeżeli wszytskie warunki poprawności zostały spełnione i nie ma loginu w bazie dodaj nowy rekord do bazy*/}
         setKomunikat('Twoje dane zostały dodane do bazy!');
         setTyp('poprawny');
       }
@@ -47,9 +48,9 @@ export default function Rejestracja({navigation}) {
     >
       <Text style={styles.blackHeaderText}>Rejestracja</Text>
       <Text style={styles.normalText}> Login: </Text>
-      <TextInput style={styles.inputText} placeholder="podaj login" onChangeText={(val) => setLogin(val)} />
+      <TextInput style={styles.inputText} placeholder="podaj login" onChangeText={(val) => setLogin(val)} /> {/*jeżeli login jest w bazie wyświetl o tym komunikat*/}
       <Text style={styles.normalText}>Hasło: </Text>
-      <TextInput style={styles.inputText} placeholder="podaj hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
+      <TextInput style={styles.inputText} placeholder="podaj hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} /> 
          <Text style={styles.normalText}>Powtórz hasło: </Text>
       <TextInput style={styles.inputText} placeholder="powtórz hasło" secureTextEntry={true} onChangeText={(val) => setPowtorz(val)}/>
       <TouchableOpacity onPress={warRej}>
