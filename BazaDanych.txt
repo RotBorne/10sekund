@@ -39,3 +39,22 @@ CREATE TABLE czas_wykonania (
 
 ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS kod_rodziny VARCHAR(50) UNIQUE;
 ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS nazwa_rodziny VARCHAR(255);
+
+
+
+
+//uruchomienie wszystkiego zapisać jako .bat
+@echo off
+title Uruchamianie Projektu Co Kto
+
+echo Uruchamianie serwera Node.js...
+start "Node Server" cmd /k "cd /d D:\10sekund\10sekund && node server.js"
+
+echo Uruchamianie aplikacji Frontend (npm run dev)...
+start "Vite / Frontend" cmd /k "cd /d D:\10sekund\10sekund && npm run dev"
+
+echo Uruchamianie Expo (React Native)...
+start "Expo Mobile" cmd /k "cd /d D:\10sekund\10sekund\mobile-app && npx expo start"
+
+echo Wskazane terminale zostaly uruchomione!
+pause
