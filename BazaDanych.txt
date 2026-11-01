@@ -36,3 +36,6 @@ CREATE TABLE czas_wykonania (
     id_zadania INT REFERENCES lista_obowiazkow(id_zadania) ON DELETE CASCADE,
     id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE
 );
+
+ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS kod_rodziny VARCHAR(50) UNIQUE;
+ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS nazwa_rodziny VARCHAR(255);

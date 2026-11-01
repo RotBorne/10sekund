@@ -2,10 +2,46 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
 import { useFonts } from 'expo-font';
+const API_URL = 'http://192.168.1.50:5000/api/logowanie'; 
 
 export default function Logowanie({navigation}) {
   const [login, setLogin] = useState('');
   const [haslo, setHaslo] = useState('');
+  const [komunikat, setKomunikat] = useState('');
+
+  const handleLogin = async () => {
+    if (login === '' || haslo === '') {
+      setKomunikat('Wpisz login i hasło!');
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: login,
+          haslo: haslo,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        // Serwer zwrócił błąd (np. status 400 lub 404)
+        setKomunikat(data.error || 'Błąd logowania');
+      } else {
+        // Logowanie udane!
+        setKomunikat('');
+        // Przechodzimy do profilu lub nowego ekranu
+        navigation.navigate('Nowa rodzina', { user: data.user });
+      }
+    } catch (err) {
+      console.error(err);
+      setKomunikat('Błąd połączenia z serwerem!');
+    }
+  };
+
   const [fontsLoaded] = useFonts({
     'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
   });
@@ -25,9 +61,9 @@ export default function Logowanie({navigation}) {
     >
       <Text style={styles.blackHeaderText}>Logowanie</Text>
       <Text style={styles.normalText}> Login: </Text>
-      <TextInput style={styles.inputText} placeholder="wpisz login" onChangeText={(val) => setLogin(val)} />
+      <TextInput style={styles.inputText} placeholder="wpisz login" value={login} onChangeText={(val) => setLogin(val)} />
       <Text style={styles.normalText}>Hasło: </Text>
-      <TextInput style={styles.inputText} placeholder="wpisz hasło" secureTextEntry={true} onChangeText={(val) => setHaslo(val)} />
+      <TextInput style={styles.inputText} placeholder="wpisz hasło" secureTextEntry={true} value={haslo} onChangeText={(val) => setHaslo(val)} />
       <TouchableOpacity>
         {/*przeszukaj baze czy istenie para: taki login z wpisanym hasłem*/}
       <Text style={styles.button2} onPress={() => navigation.navigate('Nowa rodzina')}> Zaloguj się </Text>
@@ -36,6 +72,9 @@ export default function Logowanie({navigation}) {
       <TouchableOpacity>
       <Text style={styles.button2} onPress={() => navigation.navigate('Rejestracja')}> Zarejestruj się </Text>
       </TouchableOpacity>
+        <TouchableOpacity onPress={handleLogin}>
+  <Text style={styles.button2}> Zaloguj się </Text>
+</TouchableOpacity>
       </ImageBackground>
       <StatusBar style="auto" />
     </View>

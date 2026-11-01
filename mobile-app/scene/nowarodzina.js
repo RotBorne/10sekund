@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   FlatList,
+  Platform,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import { useState } from 'react';
@@ -16,7 +17,17 @@ import Checkbox from 'expo-checkbox';
 
 import Sidebar from '../scene/sidebar';
 
-export default function Nowarodzina({ navigation }) {
+const API_URL_DOLACZ = Platform.OS === 'web' 
+  ? 'http://localhost:5000/api/dolacz-rodzina' 
+  : 'http://10.0.2.2:5000/api/dolacz-rodzina';
+
+const API_URL_NOWA = Platform.OS === 'web' 
+  ? 'http://localhost:5000/api/nowa-rodzina' 
+  : 'http://10.0.2.2:5000/api/nowa-rodzina';
+
+export default function Nowarodzina({ navigation, route }) {
+  const userLogin = route?.params?.login || '';
+
   const [ifopen, setifopen] = useState(false);
   const [openTyp, setopenTyp] = useState(false);
   const [valueTyp, setvalueTyp] = useState(null);
@@ -38,12 +49,95 @@ export default function Nowarodzina({ navigation }) {
   ]);
 
   const [kod, setkod] = useState(null);
+  const [kodWpisany, setKodWpisany] = useState('');
+  const [komunikat, setKomunikat] = useState('');
+  const [typ, setTyp] = useState('error');
+
+  const generujKod = () => {
+    const losowyKod = Math.random().toString(36).substring(2, 8);
+    setkod(losowyKod);
+  };
+
   const zmianakodu = () => {
-    setkod('6xy7mn');
-    {
-      /*zmienna która ustala kod*/
+    generujKod();
+  };
+
+  const dolaczDoRodziny = async () => {
+    if (!kodWpisany) {
+      setKomunikat('Wpisz kod rodziny!');
+      setTyp('error');
+      return;
+    }
+
+    try {
+      const response = await fetch(API_URL_DOLACZ, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: userLogin,
+          kod_rodziny: kodWpisany,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setKomunikat(data.error || 'Taka rodzina nie istnieje!');
+        setTyp('error');
+      } else {
+        setKomunikat('Dołączono do rodziny!');
+        setTyp('poprawny');
+        setTimeout(() => {
+          navigation.navigate('Profil');
+        }, 1000);
+      }
+    } catch (err) {
+      console.error('Błąd połączenia:', err);
+      setKomunikat('Błąd połączenia z serwerem!');
+      setTyp('error');
     }
   };
+
+  const stworzNowaRodzine = async () => {
+    if (!kod) {
+      setKomunikat('Wygeneruj najpierw kod rodziny!');
+      setTyp('error');
+      return;
+    }
+
+    const wybranaRola = valueTyp === 'rodzina' ? valueRola_R : valueRola_W;
+
+    try {
+      const response = await fetch(API_URL_NOWA, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          login: userLogin,
+          nazwa_rodziny: valueTyp || 'Nowa Rodzina',
+          kod_rodziny: kod,
+          rola: wybranaRola || 'czlonek',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setKomunikat(data.error || 'Błąd tworzenia rodziny');
+        setTyp('error');
+      } else {
+        setKomunikat('Stworzono nową rodzinę!');
+        setTyp('poprawny');
+        setTimeout(() => {
+          navigation.navigate('Profil');
+        }, 1000);
+      }
+    } catch (err) {
+      console.error('Błąd połączenia:', err);
+      setKomunikat('Błąd połączenia z serwerem!');
+      setTyp('error');
+    }
+  };
+
   const [check, setcheck] = useState(false);
   const [fontsLoaded] = useFonts({
     'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
@@ -77,14 +171,19 @@ export default function Nowarodzina({ navigation }) {
             <Text style={styles.normalText}>Załóż nową rodzine</Text>
             </View>
             {check===false ? (
-            <View>
-            <TextInput style={styles.inputText} placeholder="wpisz kod"/>
-            <TouchableOpacity>
-              <Text style={styles.button2} onPress={() => navigation.navigate('Profil')}> Potwierdź </Text>
+            <View style={{ alignItems: 'center', width: '100%' }}>
+            <TextInput 
+              style={styles.inputText} 
+              placeholder="wpisz kod"
+              value={kodWpisany}
+              onChangeText={setKodWpisany}
+            />
+            <TouchableOpacity onPress={dolaczDoRodziny}>
+              <Text style={styles.button2}> Potwierdź </Text>
             </TouchableOpacity>
             </View>
             ) : (
-            <View>
+            <View style={{ alignItems: 'center', width: '100%' }}>
             <Text style={styles.normalText}>Wybierz typ rodziny:</Text>
             <View style={styles.dropdown}>
               <DropDownPicker
@@ -131,11 +230,24 @@ export default function Nowarodzina({ navigation }) {
             )}
             <Text style={styles.normalText}> Twój kod rodziny: </Text>
             <TouchableOpacity onPress={zmianakodu} style={styles.button2}>
-              <View> pokaż kod </View>
+              <Text style={styles.normalText}> pokaż kod </Text>
             </TouchableOpacity>
             {/*tu zostaje przekazany wygenerowny kod rodziny*/}
-            {kod !== null && <Text style={styles.normalText}>{kod}</Text>}
+            {kod !== null && (
+              <View style={{ alignItems: 'center' }}>
+                <Text style={styles.normalText}>{kod}</Text>
+                <TouchableOpacity onPress={stworzNowaRodzine}>
+                  <Text style={styles.button2}> Zatwierdź nową rodzinę </Text>
+                </TouchableOpacity>
+              </View>
+            )}
             </View>
+            )}
+
+            {komunikat !== '' && (
+              <Text style={typ === 'error' ? styles.error : styles.komunikaty}>
+                {komunikat}
+              </Text>
             )}
           </ImageBackground>
         </View>
@@ -226,6 +338,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
     margin: 5,
+    minWidth: 200,
   },
   menuButton: {
     fontSize: 30,
@@ -243,7 +356,21 @@ const styles = StyleSheet.create({
     width: '60%',
     alignItems: 'center',
     textAlign: 'center',
-    justifyContent: 'center',
+    justifycontent: 'center',
     margin: 30,
+  },
+  error: {
+    fontSize: 25,
+    color: 'red',
+    fontFamily: 'common font',
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  komunikaty: {
+    fontSize: 25,
+    color: '#025e07',
+    fontFamily: 'common font',
+    textAlign: 'center',
+    marginTop: 10,
   },
 });
