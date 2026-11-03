@@ -156,6 +156,75 @@ app.post('/api/dolacz-rodzina', async (req, res) => {
   }
 });
 
+//pobranie id użytkownika
+app.get('/api/zadania/:id_uzytkownika', async (req, res) => {
+  const { id_uzytkownika } = req.params;
+  try {
+    const result = await pool.query(
+      `SELECT id_zadania, nazwa_zadania, czas_powtarzania, id_uzytkownika, czy_wykonane, czy_w_kalendarzu, TO_CHAR(data_zadania, 'YYYY-MM-DD') AS data_zadania 
+       FROM lista_obowiazkow 
+       WHERE id_uzytkownika = $1 
+       ORDER BY data_zadania ASC NULLS LAST, id_zadania ASC`,
+      [id_uzytkownika]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Błąd pobierania zadań:', err.message);
+    res.status(500).json({ error: 'Błąd serwera podczas pobierania zadań' });
+  }
+});
+
+//nowe zadanie
+app.post('/api/zadania', async (req, res) => {
+  const { nazwa_zadania, data_zadania, czy_w_kalendarzu, id_uzytkownika } = req.body;
+
+  if (!nazwa_zadania || !id_uzytkownika) {
+    return res.status(400).json({ error: 'Nazwa zadania i użytkownik są wymagane!' });
+  }
+
+  const sformatowanaData = (data_zadania && String(data_zadania).trim() !== '') 
+    ? String(data_zadania).trim() 
+    : null;
+  try {
+    const result = await pool.query(
+      `INSERT INTO lista_obowiazkow 
+         (nazwa_zadania, data_zadania, czy_w_kalendarzu, id_uzytkownika, czy_wykonane) 
+       VALUES ($1, $2, $3, $4, false) 
+       RETURNING 
+         id_zadania, 
+         nazwa_zadania, 
+         czas_powtarzania, 
+         id_uzytkownika, 
+         czy_wykonane, 
+         czy_w_kalendarzu, 
+         TO_CHAR(data_zadania, 'YYYY-MM-DD') AS data_zadania`,
+      [nazwa_zadania.trim(), sformatowanaData, Boolean(czy_w_kalendarzu), id_uzytkownika]
+    );
+
+    res.json({ message: 'Dodano zadanie pomyślnie!', zadanie: result.rows[0] });
+  } catch (err) {
+    console.error('Błąd dodawania zadania:', err.message);
+    res.status(500).json({ error: 'Błąd serwera podczas dodawania zadania' });
+  }
+});
+
+//zmiana statusu
+app.patch('/api/zadania/:id_zadania', async (req, res) => {
+  const { id_zadania } = req.params;
+  const { czy_wykonane } = req.body;
+
+  try {
+    await pool.query(
+      'UPDATE lista_obowiazkow SET czy_wykonane = $1 WHERE id_zadania = $2',
+      [czy_wykonane, id_zadania]
+    );
+    res.json({ message: 'Zaktualizowano status zadania!' });
+  } catch (err) {
+    console.error('Błąd aktualizacji zadania:', err.message);
+    res.status(500).json({ error: 'Błąd serwera podczas aktualizacji zadania' });
+  }
+});
+
 const PORT = 5000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Serwer działa na http://localhost:${PORT}`);
