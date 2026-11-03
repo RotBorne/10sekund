@@ -28,6 +28,8 @@ CREATE TABLE lista_obowiazkow (
     czas_powtarzania VARCHAR(50),
     id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE,
     czy_wykonane BOOLEAN DEFAULT false
+    data_zadania DATE,
+    czy_w_kalendarzu BOOLEAN DEFAULT FALSE
 );
 
 -- 5. TABELA CZAS WYKONANIA
