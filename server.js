@@ -159,10 +159,12 @@ app.post('/api/dolacz-rodzina', async (req, res) => {
 //pobranie id użytkownika
 app.get('/api/zadania/:id_uzytkownika', async (req, res) => {
   const { id_uzytkownika } = req.params;
-
   try {
     const result = await pool.query(
-      'SELECT * FROM lista_obowiazkow WHERE id_uzytkownika = $1 ORDER BY data_zadania ASC',
+      `SELECT id_zadania, nazwa_zadania, czas_powtarzania, id_uzytkownika, czy_wykonane, czy_w_kalendarzu, TO_CHAR(data_zadania, 'YYYY-MM-DD') AS data_zadania 
+       FROM lista_obowiazkow 
+       WHERE id_uzytkownika = $1 
+       ORDER BY data_zadania ASC NULLS LAST, id_zadania ASC`,
       [id_uzytkownika]
     );
     res.json(result.rows);
@@ -180,11 +182,25 @@ app.post('/api/zadania', async (req, res) => {
     return res.status(400).json({ error: 'Nazwa zadania i użytkownik są wymagane!' });
   }
 
+  const sformatowanaData = (data_zadania && String(data_zadania).trim() !== '') 
+    ? String(data_zadania).trim() 
+    : null;
   try {
     const result = await pool.query(
-      'INSERT INTO lista_obowiazkow (nazwa_zadania, data_zadania, czy_w_kalendarzu, id_uzytkownika, czy_wykonane) VALUES ($1, $2, $3, $4, false) RETURNING *',
-      [nazwa_zadania, data_zadania || null, czy_w_kalendarzu || false, id_uzytkownika]
+      `INSERT INTO lista_obowiazkow 
+         (nazwa_zadania, data_zadania, czy_w_kalendarzu, id_uzytkownika, czy_wykonane) 
+       VALUES ($1, $2, $3, $4, false) 
+       RETURNING 
+         id_zadania, 
+         nazwa_zadania, 
+         czas_powtarzania, 
+         id_uzytkownika, 
+         czy_wykonane, 
+         czy_w_kalendarzu, 
+         TO_CHAR(data_zadania, 'YYYY-MM-DD') AS data_zadania`,
+      [nazwa_zadania.trim(), sformatowanaData, Boolean(czy_w_kalendarzu), id_uzytkownika]
     );
+
     res.json({ message: 'Dodano zadanie pomyślnie!', zadanie: result.rows[0] });
   } catch (err) {
     console.error('Błąd dodawania zadania:', err.message);
