@@ -1,7 +1,7 @@
 ## Sposób przechowywania danych
 
 **Wersja:** 1.0
-**Status:** proponowany\
+**Status:** zaakceptowany\
 **Data:** 03.11.2026\
 **Autorzy:** 10 Sekund
 
