@@ -64,7 +64,7 @@ export default function Rejestracja({ navigation }) {
   };
 
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
 
   if (!fontsLoaded) {
@@ -77,8 +77,7 @@ export default function Rejestracja({ navigation }) {
         <View style={styles.header}>
           <Text style={styles.whiteHeaderText}>Co Kto?</Text>
         </View>
-        <View style={styles.conteiner2}>
-          <ImageBackground source={require('../assets/background.jpg')} style={styles.body}>
+        <View style={styles.body}>
             <Text style={styles.blackHeaderText}>Rejestracja</Text>
 
             <Text style={styles.normalText}>Login:</Text>
@@ -121,7 +120,6 @@ export default function Rejestracja({ navigation }) {
             <TouchableOpacity onPress={() => navigation.goBack()}>
               <Text style={styles.button2}>Zaloguj się</Text>
             </TouchableOpacity>
-          </ImageBackground>
           <StatusBar style="auto" />
         </View>
       </View>
@@ -153,6 +151,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    backgroundColor: '#f1d1b7',
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingBottom: 40,

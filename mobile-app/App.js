@@ -2,12 +2,13 @@ import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { ValueProvider } from './context/typ';
 import Rejestracja from './scene/rejestracja';
 import Logowanie from './scene/logowanie';
 import Nowarodzina from './scene/nowarodzina';
 import Profil from './scene/profil';
 import Zadania from './scene/zadania';
-import ListaZakupow from './scene/lista-zakupow';
+import ListaZakupow from './scene/listazakupow';
 import Statystyki from './scene/statystyki';
 import Ustawienia from './scene/ustawienia';
 import Sidebar from './scene/sidebar';
@@ -16,8 +17,8 @@ import Kalendarz from './scene/kalendarz';
 const Stack=createNativeStackNavigator();
 export default function App() {
 
-  return (      
-    <NavigationContainer>
+  return (
+    <NavigationContainer> 
       <Stack.Navigator initialRouteName="Logowanie" screenOptions={{headerShown: false}}>
         <Stack.Screen 
         name="Logowanie"
@@ -59,7 +60,7 @@ export default function App() {
         name="Kalendarz"
         component={Kalendarz}
         />
-      </Stack.Navigator>      
+      </Stack.Navigator>    
     </NavigationContainer>
   );
 }

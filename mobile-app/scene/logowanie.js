@@ -43,7 +43,7 @@ export default function Logowanie({navigation}) {
   };
 
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
 
   if (!fontsLoaded) {
@@ -55,10 +55,7 @@ export default function Logowanie({navigation}) {
       <View style={styles.header}>
       <Text style={styles.whiteHeaderText}>Co Kto?</Text>
       </View>
-    <View style={styles.conteiner2}>
-      <ImageBackground source={require('../assets/background.jpg')} 
-    style={styles.body}
-    >
+    <View style={styles.body}>
       <Text style={styles.blackHeaderText}>Logowanie</Text>
       <Text style={styles.normalText}> Login: </Text>
       <TextInput style={styles.inputText} placeholder="wpisz login" value={login} onChangeText={(val) => setLogin(val)} />
@@ -75,7 +72,6 @@ export default function Logowanie({navigation}) {
         <TouchableOpacity onPress={handleLogin}>
   <Text style={styles.button2}> Zaloguj się </Text>
 </TouchableOpacity>
-      </ImageBackground>
       <StatusBar style="auto" />
     </View>
     </View>
@@ -106,6 +102,7 @@ const styles = StyleSheet.create({
   },
   body:{
     flex: 1,
+    backgroundColor: '#f1d1b7',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
