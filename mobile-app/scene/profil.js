@@ -5,6 +5,7 @@ import {useState} from 'react';
 import { useEffect } from 'react';
 
 import Sidebar from "../scene/sidebar";
+import { getSessionUser } from './session';
 
 const API_URL = Platform.OS === 'web' 
   ? 'http://localhost:5000' 
@@ -45,7 +46,8 @@ export default function Profil({ navigation, route }) {
   const [poczatekTygodnia, setPoczatekTygodnia] = useState(pobierzPoczatekTygodnia(new Date()));
   const [pokazFormularz, setPokazFormularz] = useState(false);
 //tu pobiera id użytkownika albo testowo 1
-  const idUzytkownika = route?.params?.id_uzytkownika || route?.params?.user?.id_uzytkownika || 1;
+  const currentUser = route?.params?.user || getSessionUser();
+  const idUzytkownika = currentUser?.id_uzytkownika || route?.params?.id_uzytkownika || 1;
 
   // Generowanie 7 dni tygodnia na podstawie stanu poczatekTygodnia
   const dniTygodniaNazwy = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];

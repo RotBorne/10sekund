@@ -62,7 +62,10 @@ app.post('/api/logowanie', async (req, res) => {
 
   try {
     const result = await pool.query(
-      'SELECT * FROM logowanie WHERE login = $1 AND haslo = $2',
+      `SELECT l.*, u.id_uzytkownika 
+       FROM logowanie l
+       LEFT JOIN uzytkownicy u ON l.login = u.login
+       WHERE l.login = $1 AND l.haslo = $2`,
       [login, haslo]
     );
 
@@ -70,7 +73,22 @@ app.post('/api/logowanie', async (req, res) => {
       return res.status(400).json({ error: 'Nieprawidłowy login lub hasło!' });
     }
 
-    res.json({ message: 'Zalogowano pomyślnie!', user: result.rows[0] });
+    let user = result.rows[0];
+
+    // Zabezpieczenie: jeśli w tabeli uzytkownicy brak rekordu dla tego loginu, dodajemy go
+    if (!user.id_uzytkownika) {
+      try {
+        const newUser = await pool.query(
+          'INSERT INTO uzytkownicy (login, typ_mieszkanca, czy_na_wyjezdzie) VALUES ($1, $2, $3) RETURNING id_uzytkownika',
+          [login, 'czlonek', false]
+        );
+        user.id_uzytkownika = newUser.rows[0].id_uzytkownika;
+      } catch (insertErr) {
+        console.error('Błąd tworzenia rekordu w uzytkownicy:', insertErr.message);
+      }
+    }
+
+    res.json({ message: 'Zalogowano pomyślnie!', user });
   } catch (err) {
     console.error('Błąd logowania:', err.message);
     res.status(500).json({ error: 'Błąd serwera podczas logowania' });
@@ -156,7 +174,7 @@ app.post('/api/dolacz-rodzina', async (req, res) => {
   }
 });
 
-//pobranie id użytkownika
+//pobranie id użytkownika do zadania 
 app.get('/api/zadania/:id_uzytkownika', async (req, res) => {
   const { id_uzytkownika } = req.params;
   try {
@@ -208,7 +226,7 @@ app.post('/api/zadania', async (req, res) => {
   }
 });
 
-//zmiana statusu
+//zmiana statusu zadania
 app.patch('/api/zadania/:id_zadania', async (req, res) => {
   const { id_zadania } = req.params;
   const { czy_wykonane } = req.body;
@@ -224,6 +242,32 @@ app.patch('/api/zadania/:id_zadania', async (req, res) => {
     res.status(500).json({ error: 'Błąd serwera podczas aktualizacji zadania' });
   }
 });
+
+// Pobieranie zadań do wspolnego kalendarza
+app.get('/api/zadania-kalendarz', async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT 
+         l.id_zadania, 
+         l.nazwa_zadania, 
+         l.czas_powtarzania, 
+         l.id_uzytkownika, 
+         l.czy_wykonane, 
+         l.czy_w_kalendarzu, 
+         TO_CHAR(l.data_zadania, 'YYYY-MM-DD') AS data_zadania,
+         u.login 
+       FROM lista_obowiazkow l
+       JOIN uzytkownicy u ON l.id_uzytkownika = u.id_uzytkownika
+       WHERE l.czy_w_kalendarzu = true
+       ORDER BY l.data_zadania ASC NULLS LAST, l.id_zadania ASC`
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Błąd pobierania zadań do kalendarza:', err.message);
+    res.status(500).json({ error: 'Błąd serwera podczas pobierania zadań kalendarza' });
+  }
+});
+
 
 const PORT = 5000;
 app.listen(PORT, '0.0.0.0', () => {
