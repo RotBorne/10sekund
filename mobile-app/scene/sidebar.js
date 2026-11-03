@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View,  TouchableOpacity} from 'react-native';
 import { useFonts } from 'expo-font';
 import {useState} from 'react';
+import { getSessionUser } from './session';
 
 export default function Sidebar({navigation, onClose}) {
   const [fontsLoaded] = useFonts({
@@ -12,7 +13,8 @@ export default function Sidebar({navigation, onClose}) {
   }
   const closesidebar = (screen) =>{
     if(onClose) onClose();
-    navigation.navigate(screen);
+    const currentUser = getSessionUser();
+    navigation.navigate(screen, { user: currentUser });
   };
   return ( 
     <View style={styles.conteiner}>
