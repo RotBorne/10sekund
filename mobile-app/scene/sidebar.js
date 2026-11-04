@@ -5,7 +5,7 @@ import { getSessionUser } from './session';
 
 export default function Sidebar({navigation, onClose}) {
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
 
   if (!fontsLoaded) {
@@ -55,12 +55,12 @@ const styles = StyleSheet.create({
   sidebar:{
     width: '60%',
     height: '100%',
-    backgroundColor: '#3a1b0c',
+    backgroundColor: '#b1795d',
     alignItems: 'center',
     justifyContent: 'space-around',
   },
   tlo:{
-    backgroundColor: '#2b2a2a5e',
+    backgroundColor: '#2b2a2a9a',
     flex:1,
     height: '100%',
   },
@@ -70,11 +70,12 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'center',
     width:'80%',
-    backgroundColor: '#914a34e7',
+    backgroundColor: '#6b3727b4',
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
     marginBottom:10,
+    padding:5,
   },
   touchableButton: {
     width: '85%',

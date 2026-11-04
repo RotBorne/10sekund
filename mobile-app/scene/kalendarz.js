@@ -40,7 +40,7 @@ export default function Kalendarz({ navigation, route }) {
   const [poczatekTygodnia, setPoczatekTygodnia] = useState(pobierzPoczatekTygodnia(new Date()));
 
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
 
   const pobierzZadaniaKalendarza = async () => {
@@ -106,8 +106,7 @@ export default function Kalendarz({ navigation, route }) {
           <Text style={styles.whiteHeaderText}> Co Kto?</Text>
         </View> 
 
-        <View style={styles.container}>
-          <ImageBackground source={require('../assets/background.jpg')} style={styles.body}>
+        <View style={styles.body}>
             <Text style={styles.blackHeaderText}>Kalendarz</Text>
 
             {/* PASEK PRZEŁĄCZANIA TYGODNIA */}
@@ -161,12 +160,10 @@ export default function Kalendarz({ navigation, route }) {
                   )}
                 </View>
               );
-            })}
-
-          </ImageBackground>
-        </View>    
-      </View> 
-      {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)} /> : null}
+            })} 
+    </View>  
+    </View> 
+      {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)}/>:null}
       <StatusBar style="auto" />     
     </ScrollView>
   );
@@ -194,6 +191,7 @@ const styles = StyleSheet.create({
   },
   body:{
     flex: 1,
+    backgroundColor: '#f1d1b7',
     alignItems: 'center',
     justifyContent: 'flex-start',
     minHeight: 500,

@@ -3,12 +3,12 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, S
 import { useFonts } from 'expo-font';
 import {useState} from 'react';
 
-import Sidebar from "../scene/sidebar";
+import Sidebar from "./sidebar";
 
 export default function ListaZakupow({navigation}) {
   const [ifopen,setifopen] = useState(false);
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
   if (!fontsLoaded) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
@@ -22,10 +22,8 @@ export default function ListaZakupow({navigation}) {
     </TouchableOpacity>
       <Text style={styles.whiteHeaderText}> Co Kto?</Text>
       </View> 
-    <View style={styles.container}>
-      <ImageBackground source={require('../assets/background.jpg')} style={styles.body}>
+    <View style={styles.body}>
       <Text style={styles.blackHeaderText}>Lista Zakupów</Text>
-      </ImageBackground>
     </View>    
     </View> 
       {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)}/>:null}
@@ -61,6 +59,7 @@ const styles = StyleSheet.create({
   },
   body:{
     flex: 1,
+    backgroundColor: '#f1d1b7',
     alignItems: 'center',
     justifyContent: 'flex-start',
     minHeight:500,

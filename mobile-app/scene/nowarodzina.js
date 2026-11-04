@@ -146,7 +146,7 @@ export default function Nowarodzina({ navigation, route }) {
 
   const [check, setcheck] = useState(false);
   const [fontsLoaded] = useFonts({
-    'common font': require('../assets/JustMeAgainDownHere-Regular.ttf'),
+    'common font': require('../assets/OpenSans-VariableFont_wdth,wght.ttf'),
   });
   if (!fontsLoaded) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
@@ -162,10 +162,7 @@ export default function Nowarodzina({ navigation, route }) {
           </TouchableOpacity>
           <Text style={styles.whiteHeaderText}> Co Kto?</Text>
         </View>
-        <View style={styles.container}>
-          <ImageBackground
-            source={require('../assets/background.jpg')}
-            style={styles.body}>
+        <View style={styles.body}>
             <Text style={styles.blackHeaderText}>Nowa rodzina</Text>
             <View style={styles.conteiner2}>
             <Checkbox
@@ -184,7 +181,7 @@ export default function Nowarodzina({ navigation, route }) {
               value={kodWpisany}
               onChangeText={setKodWpisany}
             />
-            <TouchableOpacity onPress={dolaczDoRodziny}>
+            <TouchableOpacity onPress={() => navigation.navigate('Profil')}>{/*onPress={dolaczDoRodziny} chwilowa zmiana zeby zobaczyc jak działa reszta aplikacji*/}
               <Text style={styles.button2}> Potwierdź </Text>
             </TouchableOpacity>
             </View>
@@ -255,7 +252,6 @@ export default function Nowarodzina({ navigation, route }) {
                 {komunikat}
               </Text>
             )}
-          </ImageBackground>
         </View>
       </View>
       {ifopen ? (
@@ -270,6 +266,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    alignContent: 'center',
   },
   conteiner2: {
     flexDirection: 'row',
@@ -298,6 +295,7 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 1,
+    backgroundColor: '#f1d1b7',
     alignItems: 'center',
     justifyContent: 'flex-start',
     minHeight: 500,
