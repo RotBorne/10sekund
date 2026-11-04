@@ -26,8 +26,8 @@
 ### 1. Niestandardowe zadania
 Jako osoba która lubi dobrą organizacje, chcę mieć możliwość dodania niestandardowych zadań, żeby inni mieli informację o tym co dzieje się w mieszkaniu.\
 **given:** Użytkownik znajduje się na ekranie głównym grafiku\
-**when:** Użytkownik wybierze opcje "dodaj niestandardowe zadanie" i wybierze status (do wykonania lub wykonane)\
-**then:** Wszyscy domownicy zobaczą je w grafiku oraz otrzymają powiadomienie
+**when:** Użytkownik wybierze opcje "dodaj niestandardowe zadanie" i wybierze status czy ma być we wspólnym kalendarzu
+**then:** Wszyscy domownicy zobaczą je w grafiku, ze statusem wykonania oraz autorem
 ### 2. Statystyki wkładu użytkownika
 Jako współlokator, chcę mieć informacje na temat procentowego wkładu każdego mieszkańca, żeby nikt nie czuł się pokrzywdzony niesprawiedliwym podziałem zadań.\
 **given:** Użytkownik jest zalogowany i znajduje się w panelu wybranego domostwa\
