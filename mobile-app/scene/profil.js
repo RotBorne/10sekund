@@ -135,7 +135,7 @@ export default function Profil({ navigation, route }) {
         }),
       });
 
-      if (response.ok) {
+      if (response.ok) { //czysci jezeli odpowiedz serwera jest dobra
         setNazwaZadania('');
         setDataZadania('');
         setCzyWKalendarzu(false);

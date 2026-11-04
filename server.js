@@ -62,7 +62,7 @@ app.post('/api/logowanie', async (req, res) => {
 
   try {
     const result = await pool.query(
-      `SELECT l.*, u.id_uzytkownika 
+      `SELECT l.*, u.id_uzytkownika, u.id_rodziny 
        FROM logowanie l
        LEFT JOIN uzytkownicy u ON l.login = u.login
        WHERE l.login = $1 AND l.haslo = $2`,
@@ -112,10 +112,11 @@ app.post('/api/nowa-rodzina', async (req, res) => {
       return res.status(400).json({ error: 'Ten kod rodziny jest już zajęty!' });
     }
 
-    await pool.query(
-      'INSERT INTO rodzina (kod_rodziny, nazwa_rodziny, typ_rodziny) VALUES ($1, $2, $3)',
+    const nowaRodzina = await pool.query(
+      'INSERT INTO rodzina (kod_rodziny, nazwa_rodziny, typ_rodziny) VALUES ($1, $2, $3) RETURNING id_rodziny',
       [String(kod_rodziny), nazwa_rodziny || 'Nowa Rodzina', nazwa_rodziny || 'Rodzina']
     );
+    const noweIdRodziny = nowaRodzina.rows[0].id_rodziny;
 
     if (login && String(login).trim() !== '') {
       await pool.query(
@@ -124,8 +125,8 @@ app.post('/api/nowa-rodzina', async (req, res) => {
       );
 
       await pool.query(
-        'UPDATE uzytkownicy SET typ_mieszkanca = $1 WHERE login = $2',
-        [rola || 'czlonek', login]
+        'UPDATE uzytkownicy SET typ_mieszkanca = $1, id_rodziny = $2 WHERE login = $3',
+        [rola || 'czlonek', noweIdRodziny, login]
       );
     }
 
@@ -153,18 +154,18 @@ app.post('/api/dolacz-rodzina', async (req, res) => {
       return res.status(404).json({ error: 'Taka rodzina nie istnieje!' });
     }
 
+    const familyId = checkFamily.rows[0].id_rodziny;
+
     if (login && String(login).trim() !== '') {
       await pool.query(
         'UPDATE logowanie SET kod_rodziny = $1 WHERE login = $2',
         [String(kod_rodziny), login]
       );
 
-      if (rola) {
-        await pool.query(
-          'UPDATE uzytkownicy SET typ_mieszkanca = $1 WHERE login = $2',
-          [rola, login]
-        );
-      }
+      await pool.query(
+        'UPDATE uzytkownicy SET typ_mieszkanca = COALESCE($1, typ_mieszkanca), id_rodziny = $2 WHERE login = $3',
+        [rola || null, familyId, login]
+      );
     }
 
     res.json({ message: 'Dołączono do rodziny!', rodzina: checkFamily.rows[0] });
@@ -244,7 +245,8 @@ app.patch('/api/zadania/:id_zadania', async (req, res) => {
 });
 
 // Pobieranie zadań do wspolnego kalendarza
-app.get('/api/zadania-kalendarz', async (req, res) => {
+app.get('/api/zadania-kalendarz/:id_rodziny', async (req, res) => {
+  const { id_rodziny } = req.params;
   try {
     const result = await pool.query(
       `SELECT 
@@ -258,8 +260,9 @@ app.get('/api/zadania-kalendarz', async (req, res) => {
          u.login 
        FROM lista_obowiazkow l
        JOIN uzytkownicy u ON l.id_uzytkownika = u.id_uzytkownika
-       WHERE l.czy_w_kalendarzu = true
-       ORDER BY l.data_zadania ASC NULLS LAST, l.id_zadania ASC`
+       WHERE l.czy_w_kalendarzu = true AND u.id_rodziny = $1
+       ORDER BY l.data_zadania ASC NULLS LAST, l.id_zadania ASC`,
+       [id_rodziny]
     );
     res.json(result.rows);
   } catch (err) {

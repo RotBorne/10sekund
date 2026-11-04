@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, ScrollView, 
 import { useFonts } from 'expo-font';
 import { useState, useEffect } from 'react';
 import Sidebar from "../scene/sidebar";
+import { getSessionUser } from './session';
 
 const API_URL = Platform.OS === 'web' 
   ? 'http://localhost:5000' 
@@ -30,6 +31,10 @@ const pobierzPoczatekTygodnia = (data) => {
 };
 
 export default function Kalendarz({ navigation, route }) {
+    //pobranie uzytkowanika i id
+  const currentUser = route?.params?.user || getSessionUser();
+  const idRodziny = currentUser?.id_rodziny;
+
   const [ifopen, setifopen] = useState(false);
   const [zadaniaKalendarza, setZadaniaKalendarza] = useState([]);
   const [poczatekTygodnia, setPoczatekTygodnia] = useState(pobierzPoczatekTygodnia(new Date()));
@@ -39,8 +44,12 @@ export default function Kalendarz({ navigation, route }) {
   });
 
   const pobierzZadaniaKalendarza = async () => {
+       if (!idRodziny) {
+      console.log('Brak id_rodziny zalogowanego użytkownika');
+      return;
+    }
     try {
-      const response = await fetch(`${API_URL}/api/zadania-kalendarz`);
+      const response = await fetch(`${API_URL}/api/zadania-kalendarz/${idRodziny}`);
       const data = await response.json();
       if (response.ok && Array.isArray(data)) {
         setZadaniaKalendarza(data);
@@ -54,7 +63,7 @@ export default function Kalendarz({ navigation, route }) {
 
   useEffect(() => {
     pobierzZadaniaKalendarza();
-  }, []);
+  }, [idRodziny]);
 
   const dniTygodniaNazwy = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
   const dniTygodnia = dniTygodniaNazwy.map((nazwa, index) => {
