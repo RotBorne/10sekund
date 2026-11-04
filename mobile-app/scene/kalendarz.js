@@ -97,8 +97,7 @@ export default function Kalendarz({ navigation, route }) {
           <Text style={styles.whiteHeaderText}> Co Kto?</Text>
         </View> 
 
-        <View style={styles.container}>
-          <ImageBackground source={require('../assets/background.jpg')} style={styles.body}>
+        <View style={styles.body}>
             <Text style={styles.blackHeaderText}>Kalendarz</Text>
 
             {/* PASEK PRZEŁĄCZANIA TYGODNIA */}
@@ -152,20 +151,10 @@ export default function Kalendarz({ navigation, route }) {
                   )}
                 </View>
               );
-            })}
-
-          </ImageBackground>
-        </View>    
-      </View> 
-<<<<<<< HEAD
-    <View style={styles.body}>
-      <Text style={styles.blackHeaderText}>Kalendarz</Text>
-    </View>    
+            })} 
+    </View>  
     </View> 
       {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)}/>:null}
-=======
-      {ifopen ? <Sidebar navigation={navigation} onClose={() => setifopen(false)} /> : null}
->>>>>>> 1c7d2dd314f2d6678a1821c9ca30fae971939e33
       <StatusBar style="auto" />     
     </ScrollView>
   );

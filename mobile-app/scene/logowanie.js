@@ -84,13 +84,6 @@ export default function Logowanie({navigation}) {
       <TouchableOpacity onPress={() => navigation.navigate('Rejestracja')}>
         <Text style={styles.button2}> Zarejestruj się </Text>
       </TouchableOpacity>
-<<<<<<< HEAD
-        <TouchableOpacity onPress={handleLogin}>
-  <Text style={styles.button2}> Zaloguj się </Text>
-</TouchableOpacity>
-=======
-      </ImageBackground>
->>>>>>> 1c7d2dd314f2d6678a1821c9ca30fae971939e33
       <StatusBar style="auto" />
     </View>
     </View>

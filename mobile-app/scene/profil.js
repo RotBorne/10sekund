@@ -4,11 +4,8 @@ import { useFonts } from 'expo-font';
 import { useContext, useState, useEffect } from 'react';
 
 import Sidebar from "../scene/sidebar";
-<<<<<<< HEAD
 import { ValueContext } from '../context/typ';
-=======
 import { getSessionUser } from './session';
->>>>>>> 1c7d2dd314f2d6678a1821c9ca30fae971939e33
 
 const API_URL = Platform.OS === 'web' 
   ? 'http://localhost:5000' 
@@ -51,15 +48,9 @@ export default function ListaZakupow({ navigation, route }) {
   const [komunikat, setKomunikat] = useState('');
   const [poczatekTygodnia, setPoczatekTygodnia] = useState(pobierzPoczatekTygodnia(new Date()));
   const [pokazFormularz, setPokazFormularz] = useState(false);
-<<<<<<< HEAD
-
-  // Pobiera ID użytkownika albo testowo 1
-  const idUzytkownika = route?.params?.id_uzytkownika || route?.params?.user?.id_uzytkownika || 1;
-=======
 //tu pobiera id użytkownika albo testowo 1
   const currentUser = route?.params?.user || getSessionUser();
   const idUzytkownika = currentUser?.id_uzytkownika || route?.params?.id_uzytkownika || 1;
->>>>>>> 1c7d2dd314f2d6678a1821c9ca30fae971939e33
 
   // Generowanie 7 dni tygodnia na podstawie stanu poczatekTygodnia
   const dniTygodniaNazwy = ['Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'];
@@ -196,13 +187,13 @@ export default function ListaZakupow({ navigation, route }) {
 
         <View style={styles.body}>
           <Text style={styles.blackHeaderText}>Profil</Text>
-          <Text style={styles.normalText}>
+          {/*<Text style={styles.normalText}>
             Typ rodziny: {valueTyp}
           </Text>
           <Text style={styles.normalText}>
             Twoja rola: {valueRola_R}
           </Text>
-
+            */}
           {/* NAGŁÓWEK ORAZ PRZYCISK DODAJ ZADANIE PO PRAWEJ */}
           <View style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginVertical: 10 }}>
             <Text style={[styles.blackHeaderText, { textAlign: 'left', width: 'auto', marginBottom: 0 }]}>Twoja lista:</Text>
