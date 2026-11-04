@@ -1,8 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { useFonts } from 'expo-font';
-const API_URL = 'http://192.168.1.50:5000/api/logowanie'; 
+import { setSessionUser } from './session';
+
+const API_URL = Platform.OS === 'web' 
+  ? 'http://localhost:5000/api/logowanie' 
+  : 'http://10.0.2.2:5000/api/logowanie';
 
 export default function Logowanie({navigation}) {
   const [login, setLogin] = useState('');
@@ -29,12 +33,18 @@ export default function Logowanie({navigation}) {
 
       if (!response.ok) {
         // Serwer zwrócił błąd (np. status 400 lub 404)
-        setKomunikat(data.error || 'Błąd logowania');
+        setKomunikat(data.error || 'Nieprawidłowy login lub hasło!');
       } else {
         // Logowanie udane!
         setKomunikat('');
-        // Przechodzimy do profilu lub nowego ekranu
-        navigation.navigate('Nowa rodzina', { user: data.user });
+        setSessionUser(data.user);
+
+        // Jeśli użytkownik należy już do rodziny, kierujemy go bezpośrednio do Profilu
+        if (data.user?.kod_rodziny) {
+          navigation.navigate('Profil', { user: data.user });
+        } else {
+          navigation.navigate('Nowa rodzina', { user: data.user });
+        }
       }
     } catch (err) {
       console.error(err);
@@ -61,17 +71,26 @@ export default function Logowanie({navigation}) {
       <TextInput style={styles.inputText} placeholder="wpisz login" value={login} onChangeText={(val) => setLogin(val)} />
       <Text style={styles.normalText}>Hasło: </Text>
       <TextInput style={styles.inputText} placeholder="wpisz hasło" secureTextEntry={true} value={haslo} onChangeText={(val) => setHaslo(val)} />
-      <TouchableOpacity>
-        {/*przeszukaj baze czy istenie para: taki login z wpisanym hasłem*/}
-      <Text style={styles.button2} onPress={() => navigation.navigate('Nowa rodzina')}> Zaloguj się </Text>
+
+      <TouchableOpacity onPress={handleLogin}>
+        <Text style={styles.button2}> Zaloguj się </Text>
       </TouchableOpacity>
+
+      {komunikat !== '' && (
+        <Text style={styles.error}>{komunikat}</Text>
+      )}
+
       <Text style={styles.normalText}> Nie masz konta? </Text>
-      <TouchableOpacity>
-      <Text style={styles.button2} onPress={() => navigation.navigate('Rejestracja')}> Zarejestruj się </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Rejestracja')}>
+        <Text style={styles.button2}> Zarejestruj się </Text>
       </TouchableOpacity>
+<<<<<<< HEAD
         <TouchableOpacity onPress={handleLogin}>
   <Text style={styles.button2}> Zaloguj się </Text>
 </TouchableOpacity>
+=======
+      </ImageBackground>
+>>>>>>> 1c7d2dd314f2d6678a1821c9ca30fae971939e33
       <StatusBar style="auto" />
     </View>
     </View>
@@ -148,5 +167,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     padding: 5,
     margin:5,
+  },
+  error: {
+    fontSize: 25,
+    color: 'red',
+    fontFamily: 'common font',
+    textAlign: 'center',
+    marginTop: 10,
   },
 });

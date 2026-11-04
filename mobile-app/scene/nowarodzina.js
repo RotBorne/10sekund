@@ -16,6 +16,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import Checkbox from 'expo-checkbox';
 
 import Sidebar from '../scene/sidebar';
+import { getSessionUser, setSessionUser } from './session';
 
 const API_URL_DOLACZ = Platform.OS === 'web' 
   ? 'http://localhost:5000/api/dolacz-rodzina' 
@@ -26,7 +27,8 @@ const API_URL_NOWA = Platform.OS === 'web'
   : 'http://10.0.2.2:5000/api/nowa-rodzina';
 
 export default function Nowarodzina({ navigation, route }) {
-  const userLogin = route?.params?.login || '';
+  const currentUser = route?.params?.user || getSessionUser();
+  const userLogin = currentUser?.login || route?.params?.login || '';
 
   const [ifopen, setifopen] = useState(false);
   const [openTyp, setopenTyp] = useState(false);
@@ -85,10 +87,12 @@ export default function Nowarodzina({ navigation, route }) {
         setKomunikat(data.error || 'Taka rodzina nie istnieje!');
         setTyp('error');
       } else {
+        const updatedUser = { ...currentUser, kod_rodziny: kodWpisany };
+        setSessionUser(updatedUser);
         setKomunikat('Dołączono do rodziny!');
         setTyp('poprawny');
         setTimeout(() => {
-          navigation.navigate('Profil');
+          navigation.navigate('Profil', { user: updatedUser });
         }, 1000);
       }
     } catch (err) {
@@ -125,10 +129,12 @@ export default function Nowarodzina({ navigation, route }) {
         setKomunikat(data.error || 'Błąd tworzenia rodziny');
         setTyp('error');
       } else {
+        const updatedUser = { ...currentUser, kod_rodziny: kod };
+        setSessionUser(updatedUser);
         setKomunikat('Stworzono nową rodzinę!');
         setTyp('poprawny');
         setTimeout(() => {
-          navigation.navigate('Profil');
+          navigation.navigate('Profil', { user: updatedUser });
         }, 1000);
       }
     } catch (err) {
