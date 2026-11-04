@@ -1,0 +1,62 @@
+-- 1. TABELA RODZINA
+CREATE TABLE rodzina (
+    id_rodziny SERIAL PRIMARY KEY,
+    typ_rodziny VARCHAR(50),
+    czas_stworzenia TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 2. TABELA UŻYTKOWNICY
+CREATE TABLE uzytkownicy (
+    id_uzytkownika SERIAL PRIMARY KEY,
+    login VARCHAR(50) NOT NULL,
+    typ_mieszkanca VARCHAR(50),
+    czy_na_wyjezdzie BOOLEAN DEFAULT false,
+    id_rodziny INT REFERENCES rodzina(id_rodziny) ON DELETE SET NULL
+);
+
+-- 3. TABELA LOGOWANIE
+CREATE TABLE logowanie (
+    login VARCHAR(50) PRIMARY KEY,
+    haslo VARCHAR(255) NOT NULL,
+    kod_rodziny VARCHAR(50)
+);
+
+-- 4. TABELA OD LISTY OBOWIĄZKÓW
+CREATE TABLE lista_obowiazkow (
+    id_zadania SERIAL PRIMARY KEY,
+    nazwa_zadania VARCHAR(255) NOT NULL,
+    czas_powtarzania VARCHAR(50),
+    id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE,
+    czy_wykonane BOOLEAN DEFAULT false
+    data_zadania DATE,
+    czy_w_kalendarzu BOOLEAN DEFAULT FALSE
+);
+
+-- 5. TABELA CZAS WYKONANIA
+CREATE TABLE czas_wykonania (
+    czas TIMESTAMP DEFAULT CURRENT_TIMESTAMP PRIMARY KEY,
+    id_zadania INT REFERENCES lista_obowiazkow(id_zadania) ON DELETE CASCADE,
+    id_uzytkownika INT REFERENCES uzytkownicy(id_uzytkownika) ON DELETE CASCADE
+);
+
+ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS kod_rodziny VARCHAR(50) UNIQUE;
+ALTER TABLE rodzina ADD COLUMN IF NOT EXISTS nazwa_rodziny VARCHAR(255);
+
+
+
+
+//uruchomienie wszystkiego zapisać jako .bat
+@echo off
+title Uruchamianie Projektu Co Kto
+
+echo Uruchamianie serwera Node.js...
+start "Node Server" cmd /k "cd /d D:\10sekund\10sekund && node server.js"
+
+echo Uruchamianie aplikacji Frontend (npm run dev)...
+start "Vite / Frontend" cmd /k "cd /d D:\10sekund\10sekund && npm run dev"
+
+echo Uruchamianie Expo (React Native)...
+start "Expo Mobile" cmd /k "cd /d D:\10sekund\10sekund\mobile-app && npx expo start"
+
+echo Wskazane terminale zostaly uruchomione!
+pause
