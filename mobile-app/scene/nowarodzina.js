@@ -196,8 +196,8 @@ export default function Nowarodzina({ navigation, route }) {
                 setOpen={setopenTyp}
                 setValue={setvalueTyp}
                 setItems={setitemTyp}
-                style={styles.button2}
-                textStyle={styles.normalText}
+                style={styles.button3}
+                textStyle={styles.dropdownbutton}
                 placeholder="Wybierz Typ"
               />
             </View>
@@ -211,8 +211,8 @@ export default function Nowarodzina({ navigation, route }) {
                   setOpen={setopenRola_R}
                   setValue={setvalueRola_R}
                   setItems={setitemRola_R}
-                  style={styles.button2}
-                  textStyle={styles.normalText}
+                  style={styles.button3}
+                  textStyle={styles.dropdownbutton}
                   placeholder="Wybierz role"
                 />
               </View>
@@ -225,8 +225,8 @@ export default function Nowarodzina({ navigation, route }) {
                   setOpen={setopenRola_W}
                   setValue={setvalueRola_W}
                   setItems={setitemRola_W}
-                  style={styles.button2}
-                  textStyle={styles.normalText}
+                  style={styles.button3}
+                  textStyle={styles.dropdownbutton}
                   placeholder="Wybierz role"
                 />
               </View>
@@ -267,6 +267,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     alignContent: 'center',
+    minHeight: 800,
   },
   conteiner2: {
     flexDirection: 'row',
@@ -320,9 +321,6 @@ const styles = StyleSheet.create({
   },
   button2: {
     fontSize: 30,
-    color: 'black',
-    fontFamily: 'common font',
-    textAlign: 'center',
     width: '60%',
     backgroundColor: '#3a0e00bb',
     alignItems: 'center',
@@ -357,7 +355,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   dropdown: {
-    width: '60%',
+    zIndex:998,
     alignItems: 'center',
     textAlign: 'center',
     justifycontent: 'center',
@@ -376,5 +374,21 @@ const styles = StyleSheet.create({
     fontFamily: 'common font',
     textAlign: 'center',
     marginTop: 10,
+  },
+  dropdownbutton: {
+    fontSize: 30,
+    color: 'black',
+    fontFamily: 'common font',
+    textAlgin: 'center',
+  },
+  button3:{
+    fontSize: 30,
+    backgroundColor:'#3a0e00bb',
+    alginItem:'center',
+    justifyContent: 'center',
+    shadowColor: 'black',
+    shadowOffset:{width: 2, hight: 20},
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
   },
 });

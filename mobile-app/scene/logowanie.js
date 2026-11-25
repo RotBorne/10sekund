@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState} from 'react';
-import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Platform } from 'react-native';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, TextInput, Platform, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
 import { setSessionUser } from './session';
 
@@ -60,7 +60,8 @@ export default function Logowanie({navigation}) {
     return <Text>błąd przy ładowaniu czcionki</Text>;
   }
 
-  return (    
+  return ( 
+    <ScrollView>   
     <View style={styles.container}>
       <View style={styles.header}>
       <Text style={styles.whiteHeaderText}>Co Kto?</Text>
@@ -87,6 +88,7 @@ export default function Logowanie({navigation}) {
       <StatusBar style="auto" />
     </View>
     </View>
+    </ScrollView>
   );
 }
 
@@ -94,6 +96,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    minHeight: 800,
   },
   conteiner2:{
     flex: 1,
